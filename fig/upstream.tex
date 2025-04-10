@@ -1,0 +1,49 @@
+\documentclass[10pt]{article}
+\usepackage[linesnumbered, vlined]{algorithm2e}
+% \usepackage[paperheight=21.1cm,paperwidth=10.5cm, margin=0mm]{geometry}
+\usepackage[paperheight=12.5cm, paperwidth=5.5in, margin=0mm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\begin{algorithm}
+  \SetKwFor{Loop}{loop}{}{end}
+  \KwIn{Two-dimensional flow direction ($\mathbb{F}$) and drainage density ($\mathbb{D}$)}
+  \KwOut{Two-dimensional upstream flow accumulation length ($\mathbb{L}$) for each grid cell}
+  \tcc{Count the number of upstream (donor) cells for each cell}
+  Let $n$ be a two-dimensional array of the same size as $\mathbb{F}$, filled by zeros\;
+  \ForEach{\normalfont{grid cell $(i, j)$ in the study area}}{
+    Check the flow direction of $(i, j)$, identify the downstream grid cell $(i', j')$\;
+    $n(i', j') = n(i', j') + 1$\;
+  }
+  \tcc{Find the source cells}
+  Let $S$ be a stack of grid cell indices\;
+  \ForEach{\normalfont{grid cell $(i, j)$ in the study area}}{
+    \If{$n(i, j) = 0$}{
+      Push $(i, j)$ to $S$\;
+    }
+  }
+  \tcc{Initialize $\mathbb{L}$}
+  Let $\mathbb{L}$ be a two-dimensional array of the same size as $\mathbb{F}$\;
+  \ForEach{\normalfont{grid cell $(i, j)$ in the study area}}{
+    $\mathbb{L}(i, j) = \mathbb{D}(i, j) \times A(i, j)$, where $A(i,j)$ is the grid cell area\;
+  }
+  \tcc{Propagate length from sources downstream}
+  \While{$S$ is not empty}{
+    Pop $(i, j)$ from $S$\;
+    \While{\normalfont{Check the flow direction $\mathbb{F}$, if $(i,j)$ has a downstream cell $(i',j')$}}{
+      $\mathbb{L}(i',j') = \mathbb{L}(i',j') + \mathbb{L}(i,j)$\;
+      \If{$n(i',j') >= 2$} {
+        $n(i',j') = n(i',j') - 1$\;
+        Break\;
+      }
+      \Else{
+        Let $(i,j) \leftarrow (i',j')$\;
+      }
+    }
+  }
+
+\end{algorithm}
+
+\end{document}
