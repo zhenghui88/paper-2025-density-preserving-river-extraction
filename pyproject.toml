@@ -1,0 +1,14 @@
+[project]
+name = "paper-density-preserving-river-extraction"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.13"
+dependencies = [
+    "h5netcdf>=1.6.1",
+    "matplotlib>=3.10",
+    "numba>=0.61.2",
+    "rasterio>=1.4.3",
+]
+
+[dependency-groups]
+dev = ["ipykernel>=6.29"]
